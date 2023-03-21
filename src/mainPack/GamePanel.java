@@ -7,6 +7,9 @@ import java.awt.Graphics2D;
 
 import javax.swing.JPanel;
 
+import entity.Player;
+import tile.TileManager;
+
 public class GamePanel extends JPanel implements Runnable{
 	
 	// SCREEN SETTINGS
@@ -14,23 +17,28 @@ public class GamePanel extends JPanel implements Runnable{
 	final int originalTileSize = 16; // 16x16 tile. Common tile size of retro games.
 	final int scale = 3; //3*16 = 48; Resizing for modern, high res screen.
 	
-	final int tileSize = originalTileSize * scale; // 48x48 tile
-	final int maxScreenCol = 16;
-	final int maxScreenRow = 12;
-	final int screenWidth = tileSize * maxScreenCol; // 768 pixels
-	final int screenHeight = tileSize * maxScreenRow; // 576 pixels
+	public final int tileSize = originalTileSize * scale; // 48x48 tile
+	public final int maxScreenCol = 16;
+	public final int maxScreenRow = 12;
+	public final int screenWidth = tileSize * maxScreenCol; // 768 pixels
+	public final int screenHeight = tileSize * maxScreenRow; // 576 pixels
+	
+	// WORLD SETTINGS	
+	public final int maxWorldCol = 50;
+	public final int maxWorldRow = 50;
+	public final int worldWidth = tileSize * maxWorldCol;
+	public final int worldHeight = tileSize * maxWorldRow;
 	
 	//Frames per Second
 	int FPS = 60;
 	
+	TileManager tileM = new TileManager (this);
 	KeyHandler keyH = new KeyHandler();
 	Thread gameThread; // a thread is something you can stop and start. Once a thread is started it keeps your program running until you stop it. 
 		//This also helps animate our game by refreshing the picture, say, 60 times per second.
+	public CollisionChecker cChecker = new CollisionChecker(this);
+	public Player player = new Player(this, keyH);
 	
-	// Set player's default position
-	int playerX = 100;
-	int playerY = 100;
-	int playerSpeed = 4;
 	
 	public GamePanel() {
 		this.setPreferredSize(new Dimension(screenWidth, screenHeight));
@@ -46,6 +54,8 @@ public class GamePanel extends JPanel implements Runnable{
 	}
 	
 	@Override
+	
+	//SLEEP GAME LOOP
 //		public void run() {
 //		
 //		double drawInterval = 1000000000/FPS;
@@ -83,6 +93,8 @@ public class GamePanel extends JPanel implements Runnable{
 //			
 //		}
 	
+	
+	//DELTA GAME LOOP
 	public void run() {
 		
 		double drawInterval = 1000000000/FPS;
@@ -121,18 +133,7 @@ public class GamePanel extends JPanel implements Runnable{
 	
 	public void update() {
 		
-		if(keyH.upPressed == true) {
-			playerY -= playerSpeed; 
-			
-		}
-		else if (keyH.downPressed == true) {
-			playerY += playerSpeed;
-		}
-		else if (keyH.leftPressed == true) {
-			playerX -= playerSpeed;
-		}else if (keyH.rightPressed == true) {
-			playerX += playerSpeed;
-		}
+		player.update();
 		
 	}
 	
@@ -142,9 +143,9 @@ public class GamePanel extends JPanel implements Runnable{
 		
 		Graphics2D g2 = (Graphics2D)g;
 		
-		g2.setColor(Color.white);
+		tileM.draw(g2); //tiles need to be drawn before the player so that they are in the background and not over the character
 		
-		g2.fillRect(playerX, playerY, tileSize, tileSize);
+		player.draw(g2);
 		
 		g2.dispose();
 		
