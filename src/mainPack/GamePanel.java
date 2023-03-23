@@ -8,6 +8,7 @@ import java.awt.Graphics2D;
 import javax.swing.JPanel;
 
 import entity.Player;
+import object.SuperObject;
 import tile.TileManager;
 
 public class GamePanel extends JPanel implements Runnable{
@@ -37,7 +38,10 @@ public class GamePanel extends JPanel implements Runnable{
 	Thread gameThread; // a thread is something you can stop and start. Once a thread is started it keeps your program running until you stop it. 
 		//This also helps animate our game by refreshing the picture, say, 60 times per second.
 	public CollisionChecker cChecker = new CollisionChecker(this);
+	public AssetSetter aSetter = new AssetSetter(this);
 	public Player player = new Player(this, keyH);
+	public SuperObject obj[] = new SuperObject[10]; //Can display up to ten objects on screen at a time
+	
 	
 	
 	public GamePanel() {
@@ -46,6 +50,11 @@ public class GamePanel extends JPanel implements Runnable{
 		this.setDoubleBuffered(true);
 		this.addKeyListener(keyH);
 		this.setFocusable(true);
+	}
+	
+	public void setupGame() {
+		
+		aSetter.setObject();
 	}
 		
 	public void startGameThread() {
@@ -143,8 +152,18 @@ public class GamePanel extends JPanel implements Runnable{
 		
 		Graphics2D g2 = (Graphics2D)g;
 		
+		//TILE
 		tileM.draw(g2); //tiles need to be drawn before the player so that they are in the background and not over the character
 		
+		//OBJECT
+		for (int i = 0; i < obj.length; i++) {
+			
+			if(obj[i] != null) {
+				obj[i].draw(g2, this);
+			}
+		}
+		
+		//PLAYER
 		player.draw(g2);
 		
 		g2.dispose();
