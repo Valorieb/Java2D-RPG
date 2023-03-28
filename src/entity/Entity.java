@@ -13,7 +13,8 @@ public class Entity {
 	
 	public int spriteCounter = 0;
 	public int spriteNum = 1;
-	public Rectangle solidArea;
+	public Rectangle solidArea; //creates invisible rectangle that can store its dimensions.
+	public int solidAreaDefaultX, solidAreaDefaultY;
 	public boolean collisionOn = false;
 
 }

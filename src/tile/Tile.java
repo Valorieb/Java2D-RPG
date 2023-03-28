@@ -1,6 +1,6 @@
 package tile;
 
-import java.awt.Rectangle;
+
 import java.awt.image.BufferedImage;
 
 // This class represents a single tile
