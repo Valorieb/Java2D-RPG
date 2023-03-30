@@ -35,9 +35,11 @@ public class GamePanel extends JPanel implements Runnable{
 	//SYSTEM
 	TileManager tileM = new TileManager (this);
 	KeyHandler keyH = new KeyHandler();
-	Sound sound = new Sound();
+	Sound music = new Sound();
+	Sound se = new Sound();
 	public CollisionChecker cChecker = new CollisionChecker(this);
 	public AssetSetter aSetter = new AssetSetter(this);
+	public UI ui = new UI(this);
 	Thread gameThread; // a thread is something you can stop and start. Once a thread is started it keeps your program running until you stop it. 
 	//This also helps animate our game by refreshing the picture, say, 60 times per second.
 	
@@ -171,22 +173,25 @@ public class GamePanel extends JPanel implements Runnable{
 		//PLAYER
 		player.draw(g2);
 		
+		//UI
+		ui.draw(g2);
+		
 		g2.dispose();
 		
 	}
 	
 	public void playMusic(int i) {
 		
-		sound.setFile(i);
-		sound.play();
-		sound.loop();
+		music.setFile(i);
+		music.play();
+		music.loop();
 	}
 	public void stopMusic() {
-		sound.stop();
+		music.stop();
 		
 	}
 	public void playSE(int i) {
-		sound.setFile(i);
-		sound.play();
+		se.setFile(i);
+		se.play();
 	}
 }
